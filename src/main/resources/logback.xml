@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+	<property resource="logback.properties"/>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [Thread:%thread] [%C.%M.%L] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGGING_HOME}/${LOGGING_FILENAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGGING_HOME}/${LOGGING_FILENAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+ 
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [Thread:%thread] [%C.%M.%L] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    
+    <if condition='property("SPRING_PROFILES_ACTIVE").equals("real")'>
+    	<then>
+    		<root level="warn">
+    			<appender-ref ref="console"/>
+    			<appender-ref ref="FILE"/>
+    		</root>
+    	</then>
+    	<else>
+		    <logger name="org.springframework" level="info"/>
+		    <logger name="jdbc.sqlonly" level="info"/>
+		    <logger name="com.foodtruck" level="info"/>
+		    <logger name="org.mybatis" level="info"/>
+			<logger name="org.hibernate" level="debug"/>
+    		<root level="warn">
+    			<appender-ref ref="console"/>
+    			<appender-ref ref="FILE"/>
+    		</root>
+    	</else>
+    </if>
+</configuration>
